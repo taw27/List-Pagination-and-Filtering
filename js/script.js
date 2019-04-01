@@ -16,9 +16,9 @@ FSJS project 2 - List Filter and Pagination
    will only be used inside of a function, then it can be locally 
    scoped to that function.
 ***/
-
-
-
+const studentItems = document.querySelectorAll('.student-item');
+appendPageLink(studentItems, document.querySelector('.page'));
+showPage(studentItems);
 
 /*** 
    Create the `showPage` function to hide all of the items in the 
@@ -34,7 +34,14 @@ FSJS project 2 - List Filter and Pagination
        that will be passed into the parens later when you call or 
        "invoke" the function 
 ***/
-
+function showPage(itemList, pageNumber = 1) {
+   const numberOfItems = itemList.length;
+   const itemStartIndex = (pageNumber - 1) * 10 ;
+   const itemEndIndex = (pageNumber * 10) - 1;
+   for(let i = 1; i < numberOfItems; i++) {
+      itemList[i].style.display = (i >= itemStartIndex && i <= itemEndIndex ) ?  'block' : 'none'; 
+   }
+}
 
 
 
@@ -42,7 +49,32 @@ FSJS project 2 - List Filter and Pagination
    Create the `appendPageLinks function` to generate, append, and add 
    functionality to the pagination buttons.
 ***/
+function appendPageLink(itemsList, targetParent){
+   let pagesRequired = Math.ceil(itemsList.length/10);
+   const paginationContainer = document.createElement('div');
+   let paginationList = document.createElement('ul');
 
+   createPaginationnListOfLinks(paginationList, pagesRequired); 
+
+   paginationContainer.appendChild(paginationList);
+   paginationContainer.className = 'pagination';
+   targetParent.appendChild(paginationContainer);
+}
+
+  
+
+
+function createPaginationnListOfLinks(parentOfList, numberOfLinks) {
+
+   for(let i = 0; i < numberOfLinks; i++) {
+      const link = document.createElement('li');
+      link.innerHTML = `<a href = "#">${i+1}</a>`
+      parentOfList.appendChild(link);
+   }
+
+   parentOfList.firstElementChild.querySelector('a').className = 'active';
+
+}
 
 
 
