@@ -20,6 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
    const studentItems = document.querySelectorAll('.student-item');
    appendPageLink(studentItems, document.querySelector('.page'));
    showPage(studentItems);
+   appendSearch(document.querySelector('.page-header'));
 });
 /*** 
    Create the `showPage` function to hide all of the items in the 
@@ -93,6 +94,15 @@ function handlePaginationLinks(event, itemList) {
    }
 }
 
+function appendSearch(targetParent){
+   const searchContainer = document.createElement('div');
+
+   searchContainer.innerHTML = ` <input placeholder="Search for students...">
+   <button>Search</button>`
+
+   searchContainer.className = 'student-search';
+   targetParent.appendChild(searchContainer);
+}
 
 
 
