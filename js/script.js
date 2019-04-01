@@ -20,7 +20,7 @@ window.addEventListener('DOMContentLoaded', () => {
    const studentItems = document.querySelectorAll('.student-item');
    appendPageLink(studentItems, document.querySelector('.page'));
    showPage(studentItems);
-   appendSearch(document.querySelector('.page-header'));
+   appendSearch(document.querySelector('.page-header'), studentItems);
 });
 /*** 
    Create the `showPage` function to hide all of the items in the 
@@ -36,12 +36,12 @@ window.addEventListener('DOMContentLoaded', () => {
        that will be passed into the parens later when you call or 
        "invoke" the function 
 ***/
-function showPage(itemList, pageNumber = 1) {
-   const numberOfItems = itemList.length;
+function showPage(itemsList, pageNumber = 1) {
+   const numberOfItems = itemsList.length;
    const itemStartIndex = (pageNumber - 1) * 10;
    const itemEndIndex = (pageNumber * 10) - 1;
    for (let i = 0; i < numberOfItems; i++) {
-      itemList[i].style.display = (i >= itemStartIndex && i <= itemEndIndex) ? 'block' : 'none';
+      itemsList[i].style.display = (i >= itemStartIndex && i <= itemEndIndex) ? 'block' : 'none';
    }
 }
 
@@ -79,7 +79,7 @@ function createPaginationnListOfLinks(parentOfList, numberOfLinks) {
    parentOfList.firstElementChild.querySelector('a').className = 'active';
 }
 
-function handlePaginationLinks(event, itemList) {
+function handlePaginationLinks(event, itemsList) {
    event.preventDefault();
    const clickedNode = event.target;
    const currentPageLink = document.querySelector('.active');
@@ -89,12 +89,12 @@ function handlePaginationLinks(event, itemList) {
       if (currentPageNumber !== targetPageNumber) {
          currentPageLink.classList.remove('active');
          clickedNode.className = 'active';
-         showPage(itemList, targetPageNumber);
+         showPage(itemsList, targetPageNumber);
       }
    }
 }
 
-function appendSearch(targetParent){
+function appendSearch(targetParent, itemsList){
    const searchContainer = document.createElement('div');
 
    searchContainer.innerHTML = ` <input placeholder="Search for students...">
@@ -102,8 +102,42 @@ function appendSearch(targetParent){
 
    searchContainer.className = 'student-search';
    targetParent.appendChild(searchContainer);
+
+   searchContainer.addEventListener('keyup', (event) => handleSearch(event, itemsList))
+   searchContainer.querySelector('button').addEventListener('keyup', (event) => handleSearch(event, itemsList))
 }
 
+function handleSearch(event, itemsList){
+   const targetNode = event.target;
+   if(targetNode.tagName.toLowerCase() === 'input' || targetNode.tagName.toLowerCase() === 'button'){
+      const filteredStudents = filterStudentItemsByPattern(itemsList, targetNode.value);
+      const page = document.querySelector('.page');
+      const paginationContainer = page.querySelector('.pagination');
+      hideAllItems(itemsList);
+      if(paginationContainer != null){
+         page.removeChild(paginationContainer);
+      }
 
+      if(filteredStudents.length > 0){
+         showPage(filteredStudents);
+         appendPageLink(filteredStudents, page);
+      }
+   }
+}
+
+function hideAllItems(itemsList){
+   const numberOfItems = itemsList.length;
+   for (let i = 0; i < numberOfItems; i++) {
+      itemsList[i].style.display = 'none';
+   }
+}
+
+function filterStudentItemsByPattern(itemsList, textPattern){
+   return Array.from(itemsList).filter((student) => {
+      const studentName = student.querySelector('h3');
+      const studentEmail = student.querySelector('.email')
+      return studentName.textContent.includes(textPattern) || studentEmail.textContent.includes(textPattern);
+   });
+}
 
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
