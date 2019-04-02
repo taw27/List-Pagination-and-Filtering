@@ -117,3 +117,8 @@ body{
       background-color: #4ba6c3;
       color: #fff;
     }
+.no-result-container {
+  font-size: 16px;
+  font-weight: bold;
+  color:  #595959;
+}

@@ -18,9 +18,11 @@ FSJS project 2 - List Filter and Pagination
 ***/
 window.addEventListener('DOMContentLoaded', () => {
    const studentItems = document.querySelectorAll('.student-item');
-   appendPageLink(studentItems, document.querySelector('.page'));
+   const page = document.querySelector('.page');
+   appendPageLink(studentItems, page);
    showPage(studentItems);
    appendSearch(document.querySelector('.page-header'), studentItems);
+   appendNoResultsMessage(page);
 });
 /*** 
    Create the `showPage` function to hide all of the items in the 
@@ -113,6 +115,7 @@ function handleSearch(event, itemsList){
       const filteredStudents = filterStudentItemsByPattern(itemsList, targetNode.value);
       const page = document.querySelector('.page');
       const paginationContainer = page.querySelector('.pagination');
+      const noResultContainer = document.querySelector('.no-result-container');
       hideAllItems(itemsList);
       if(paginationContainer != null){
          page.removeChild(paginationContainer);
@@ -121,6 +124,9 @@ function handleSearch(event, itemsList){
       if(filteredStudents.length > 0){
          showPage(filteredStudents);
          appendPageLink(filteredStudents, page);
+         noResultContainer.style.display = 'none';
+      }else{
+         showNoResultMessage(noResultContainer, targetNode.value);
       }
    }
 }
@@ -132,12 +138,30 @@ function hideAllItems(itemsList){
    }
 }
 
+function showNoResultMessage(parentContainer, searchedQuery){
+   parentContainer.style.display = 'block';
+   parentContainer.querySelector('.no-result-query').textContent = `"${searchedQuery}"`;
+}
+
 function filterStudentItemsByPattern(itemsList, textPattern){
+   // https://stackoverflow.com/questions/32765157/filter-or-map-nodelists-in-es6
+   // https://stackoverflow.com/questions/1789945/how-to-check-whether-a-string-contains-a-substring-in-javascript
    return Array.from(itemsList).filter((student) => {
       const studentName = student.querySelector('h3');
       const studentEmail = student.querySelector('.email')
       return studentName.textContent.includes(textPattern) || studentEmail.textContent.includes(textPattern);
    });
 }
+
+function appendNoResultsMessage(parentNode){
+   const messageContainer = document.createElement('div');
+
+   messageContainer.innerHTML = `<h2>Sorry, we could not find any name or email matching <span class = "no-result-query"></span>. Please try something else ...</h2>`
+   messageContainer.className = 'no-result-container';
+   messageContainer.style.display ='none';
+   parentNode.appendChild(messageContainer);
+}
+
+
 
 // Remember to delete the comments that came with this file, and replace them with your own code comments.
