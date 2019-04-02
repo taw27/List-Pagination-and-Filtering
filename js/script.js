@@ -5,39 +5,16 @@ FSJS project 2 - List Filter and Pagination
 
 // Study guide for this project - https://drive.google.com/file/d/1OD1diUsTMdpfMDv677TfL1xO2CEkykSz/view?usp=sharing
 
-
-/*** 
-   Add your global variables that store the DOM elements you will 
-   need to reference and/or manipulate. 
-   
-   But be mindful of which variables should be global and which 
-   should be locally scoped to one of the two main functions you're 
-   going to create. A good general rule of thumb is if the variable 
-   will only be used inside of a function, then it can be locally 
-   scoped to that function.
-***/
 window.addEventListener('DOMContentLoaded', () => {
    const studentItems = document.querySelectorAll('.student-item');
    const page = document.querySelector('.page');
-   appendPageLink(studentItems, page);
+
    showPage(studentItems);
+   appendPageLink(studentItems, page);
    appendSearch(document.querySelector('.page-header'), studentItems);
    appendNoResultsMessage(page);
 });
-/*** 
-   Create the `showPage` function to hide all of the items in the 
-   list except for the ten you want to show.
 
-   Pro Tips: 
-     - Keep in mind that with a list of 54 students, the last page 
-       will only display four.
-     - Remember that the first student has an index of 0.
-     - Remember that a function `parameter` goes in the parens when 
-       you initially define the function, and it acts as a variable 
-       or a placeholder to represent the actual function `argument` 
-       that will be passed into the parens later when you call or 
-       "invoke" the function 
-***/
 function showPage(itemsList, pageNumber = 1) {
    const numberOfItems = itemsList.length;
    const itemStartIndex = (pageNumber - 1) * 10;
@@ -47,12 +24,6 @@ function showPage(itemsList, pageNumber = 1) {
    }
 }
 
-
-
-/*** 
-   Create the `appendPageLinks function` to generate, append, and add 
-   functionality to the pagination buttons.
-***/
 function appendPageLink(itemsList, targetParent) {
    let pagesRequired = Math.ceil(itemsList.length / 10);
    const paginationContainer = document.createElement('div');
@@ -116,11 +87,9 @@ function handleSearch(event, itemsList){
       const page = document.querySelector('.page');
       const paginationContainer = page.querySelector('.pagination');
       const noResultContainer = document.querySelector('.no-result-container');
-      hideAllItems(itemsList);
-      if(paginationContainer != null){
-         page.removeChild(paginationContainer);
-      }
 
+      hidePage(itemsList, paginationContainer, page);
+      
       if(filteredStudents.length > 0){
          showPage(filteredStudents);
          appendPageLink(filteredStudents, page);
@@ -131,10 +100,14 @@ function handleSearch(event, itemsList){
    }
 }
 
-function hideAllItems(itemsList){
+function hidePage(itemsList, linkContainer, parentContainer){
    const numberOfItems = itemsList.length;
    for (let i = 0; i < numberOfItems; i++) {
       itemsList[i].style.display = 'none';
+   }
+
+   if(linkContainer != null){
+      parentContainer.removeChild(linkContainer);
    }
 }
 
@@ -163,5 +136,3 @@ function appendNoResultsMessage(parentNode){
 }
 
 
-
-// Remember to delete the comments that came with this file, and replace them with your own code comments.
