@@ -95,19 +95,20 @@ function appendSearch(targetParent, itemsList){
    targetParent.appendChild(searchContainer);
    
    searchContainer.addEventListener('keyup', (event) => handleSearch(event, itemsList));
-   searchContainer.querySelector('button').addEventListener('keyup', (event) => handleSearch(event, itemsList));
+   searchContainer.querySelector('button').addEventListener('click', (event) => handleSearch(event, itemsList));
 }
 
 /*
    Event handler to handle searches. Takes in the event object and the collection of items. Displays the items
    with email or name mathcing the search query , hides rest and displays pagination list based on the number
-   of displayed items 
+   of displayed items. Handles both keyup and click event 
  */
 function handleSearch(event, itemsList){
    const targetNode = event.target;
    if(targetNode.tagName.toLowerCase() === 'input' || targetNode.tagName.toLowerCase() === 'button'){ 
+      const searchQuery = targetNode.tagName.toLowerCase() === 'input' ? targetNode.value : targetNode.previousElementSibling.value; 
       // filters the list for the searched query
-      const filteredStudents = filterStudentItemsByPattern(itemsList, targetNode.value); 
+      const filteredStudents = filterStudentItemsByPattern(itemsList, searchQuery); 
       const page = document.querySelector('.page');
       const paginationContainer = page.querySelector('.pagination');
       const noResultContainer = document.querySelector('.no-result-container');
@@ -123,7 +124,7 @@ function handleSearch(event, itemsList){
          noResultContainer.style.display = 'none'; 
       }else{
          // shows the no search result message if the query returned no results
-         showNoResultMessage(noResultContainer, targetNode.value);
+         showNoResultMessage(noResultContainer, searchQuery);
       }
    }
 }
