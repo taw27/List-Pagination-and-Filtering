@@ -7,7 +7,7 @@
 
 ## Description
 
-A webpage that filters list of students and provides pagination links, with each each page displaying at most 10 students 
+A webpage that filters list of students and provides pagination links, with each page displaying at most 10 students 
 
  + _Each page displays at most ten students_
  + _The pagination links are dynamically created on the bottom based on the number of students in the list_
